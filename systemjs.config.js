@@ -25,8 +25,11 @@
       '@angular/upgrade': 'npm:@angular/upgrade/bundles/upgrade.umd.js',
 
       // other libraries
-      'rxjs':                      'npm:rxjs',
+      'rxjs': 'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api',
+      'ng2-bootstrap': 'node_modules/ng2-bootstrap',
+      'ng2-select': 'node_modules/ng2-select'
+
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -40,6 +43,10 @@
       'angular-in-memory-web-api': {
         main: './index.js',
         defaultExtension: 'js'
+      },
+      'ng2-select': {
+        defaultExtension: 'js',
+        main: 'ng2-select.js'
       }
     }
   });
