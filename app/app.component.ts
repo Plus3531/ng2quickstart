@@ -5,6 +5,7 @@ import { SelectComponent } from 'ng2-select';
 @Component({
     selector: 'my-app',
     template: `<h1>My Second Angular App</h1>
+    <input type="text" pInputText/>
     <sw-incidentLabel></sw-incidentLabel>
     <div class="select-style">
       <select [ngModel]="selectedDeviceObj" (ngModelChange)="onChangeObj($event)" name="sel3">
