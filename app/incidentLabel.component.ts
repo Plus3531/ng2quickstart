@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Subscription } from 'rxjs/Rx';
-import { IncidentLabelDisplay } from './model/database.model';
+import { IncidentLabelDisplay, IncidentCategory } from './model/database.model';
 import { DatabaseService } from './service/database.service';
 
 // Import RxJs required methods
@@ -34,6 +34,12 @@ import 'rxjs/add/operator/catch';
             <div class="ui-grid-col-4"><label for="cil.name">Name</label></div>
             <div class="ui-grid-col-8"><input pInputText id="cil.name" [(ngModel)]="cil.name" /></div>
         </div>
+		 <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="cil.ic">Incident Category</label></div>
+			<select [(ngModel)]="cic" id="cil.ic">
+				<option *ngFor="let c of incidentCategoryTbl" [ngValue]="c">{{c.name}}</option>
+			</select>
+        </div>
     </div>
     <footer>
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
@@ -52,12 +58,17 @@ export class IncidentLabelComponent {
 	private ilUrl = 'http://localhost:4412/api/IncidentLabel';
 	public result: string;
 	private incidentLabelTbl: Array<IncidentLabelDisplay>;
+	private incidentCategoryTbl: Array<IncidentCategory>;
 	private cil: IncidentLabelDisplay;
+	private cic: IncidentCategory;
 	displayDialog: boolean;
 	subscription: Subscription;
 	ngOnInit() {
 		this.subscription = this.databaseService.ilds.subscribe(arr => {
 			this.incidentLabelTbl = arr;
+		})
+		this.databaseService.ics.subscribe(arr => {
+			this.incidentCategoryTbl = arr;
 		})
 	}
 
@@ -70,6 +81,7 @@ export class IncidentLabelComponent {
 	}
 	edit(cil: IncidentLabelDisplay) {
 		this.cil = cil;
+		this.cic = this.incidentCategoryTbl.find(ic => ic.id == cil.incidentCategory);
 		//alert(JSON.stringify(cil));
 		this.displayDialog = true;
 	}

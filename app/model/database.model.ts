@@ -9,7 +9,7 @@ export interface IncidentLabel {
 	canBeSubincident: boolean;
 	situatorCategory: number;
 }
-export interface IncidentCaterory {
+export interface IncidentCategory {
 	id: number;
 	name: string;
 	incidentCategory: string;

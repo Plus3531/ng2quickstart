@@ -5,10 +5,10 @@ import { AppComponent } from './app.component';
 import { IncidentLabelComponent } from './incidentLabel.component';
 import { SelectModule } from "ng2-select";
 import { HttpModule } from '@angular/http';
-import {DataTableModule,SharedModule, DialogModule} from 'primeng/primeng';
+import {DataTableModule,SharedModule, DialogModule, DropdownModule} from 'primeng/primeng';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, SelectModule, HttpModule, DataTableModule, SharedModule, DialogModule],
+  imports: [BrowserModule, FormsModule, SelectModule, HttpModule, DataTableModule, SharedModule, DialogModule, DropdownModule],
   declarations: [AppComponent, IncidentLabelComponent],
   bootstrap: [AppComponent]
 })
