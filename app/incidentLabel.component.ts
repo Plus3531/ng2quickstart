@@ -1,49 +1,52 @@
 import { Component } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Subscription } from 'rxjs/Rx';
-import { IncidentLabelDisplay, IncidentCategory } from './model/database.model';
+import { IncidentLabelDisplay, IncidentCategory, IncidentLabel } from './model/database.model';
 import { DatabaseService } from './service/database.service';
 
 // Import RxJs required methods
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+//import 'rxjs/add/operator/map';
+//import 'rxjs/add/operator/catch';
 
 @Component({
 	selector: 'sw-incidentLabel',
 	providers: [DatabaseService],
 	template: `
 <button (click)="getIncidentLabels($event)">IncidentLabel</button>
-<p-dataTable [value]="incidentLabelTbl">
-	<p-column [style]="{'width':'50px'}">
+<p-dataTable [value]="incidentLabelTbl" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50]" [responsive]="true" [globalFilter]="gb">
+ <header>List of IncidentLabels</header>
+	<p-column [style]="{'width':'50px'}" [filter]="false">
 		<template let-cil="rowData" pTemplate type="body">
 			<span class="fa fa-pencil handStyle" (click)="edit(cil)"></span><span> </span><span class="fa fa-remove handStyle" (click)="remove($event)"></span>
 		</template>
 	</p-column>
-	<p-column field="name" header="Name" [sortable]="true"></p-column>
-	<p-column field="abbreviation" header="Abbreviation"></p-column>
-	<p-column field="standardPrognosis" header="StandardPrognosis"></p-column>
-	<p-column field="description" header="Description"></p-column>
-	<p-column field="canBeSubincident" header="CanBeSubincident" [style]="{'width':'80px'}"></p-column>
-	<p-column field="incidentCategoryDisp" header="Incident Category"></p-column>
-	<p-column field="situatorCategoryDisp" header="Situator Category"></p-column>
+	<p-column field="name" header="Name" filterMatchMode="contains" [filter]="true" [sortable]="true"></p-column>
+	<p-column field="abbreviation" header="Abbreviation" [filter]="true"></p-column>
+	<p-column field="standardPrognosis" header="StandardPrognosis" [filter]="true"></p-column>
+	<p-column field="description" header="Description" [filter]="true"></p-column>
+	<p-column field="canBeSubincident" header="CanBeSubincident" [style]="{'width':'80px'}" [filter]="true"></p-column>
+	<p-column field="incidentCategoryDisp" header="Incident Category" [filter]="true"></p-column>
+	<p-column field="situatorCategoryDisp" header="Situator Category" [filter]="true"></p-column>
 </p-dataTable>
 
 <p-dialog header="IncidentLabel" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" width="500">
 	<div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="cil">
 		<div class="ui-grid-row">
 			<div class="ui-grid-col-4"><label for="cil.name">Name</label></div>
-			<div class="ui-grid-col-8"><input pInputText id="cil.name" [(ngModel)]="cil.name" /></div>
+			<div class="ui-grid-col-8"><input style="{width:100%}"pInputText id="cil.name" [(ngModel)]="cil.name" /></div>
 		</div>
 		<div class="ui-grid-row">
 			<div class="ui-grid-col-4"><label for="cil.ic">Incident Category</label></div>
+			<div class="ui-grid-col-8">
 			<select [(ngModel)]="cic" id="cil.ic">
 				<option *ngFor="let c of incidentCategoryTbl" [ngValue]="c">{{c.name}}</option>
 			</select>
+			</div>
 		</div>
 	</div>
 	<footer>
 		<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-			<button type="button" pButton icon="fa fa-check" (click)="save()" label="Save"></button>
+			<button (click)="saveEdits()">Save</button>
 		</div>
 	</footer>
 </p-dialog>		
@@ -66,10 +69,12 @@ export class IncidentLabelComponent {
 	ngOnInit() {
 		this.subscription = this.databaseService.ilds.subscribe(arr => {
 			this.incidentLabelTbl = arr;
-		})
+		});
 		this.databaseService.ics.subscribe(arr => {
 			this.incidentCategoryTbl = arr;
-		})
+		});
+		//load incidentlabels
+		this.getIncidentLabels(undefined);
 	}
 
 	getIncidentLabels(event: any) {
@@ -85,5 +90,19 @@ export class IncidentLabelComponent {
 		//alert(JSON.stringify(cil));
 		this.displayDialog = true;
 	}
-
+	saveEdits() {
+		let incidentLabel = <IncidentLabel>{};
+		this.cil.incidentCategory = this.cic.id;
+		this.cil.incidentCategoryDisp = this.cic.name;
+		incidentLabel.abbreviation = this.cil.abbreviation;
+		incidentLabel.canBeSubincident = this.cil.canBeSubincident;
+		incidentLabel.description = this.cil.description;
+		incidentLabel.id = this.cil.id;
+		incidentLabel.incidentCategory = this.cic.id;
+		incidentLabel.name = this.cil.name;
+		incidentLabel.situatorCategory = this.cil.situatorCategory;
+		incidentLabel.standardPrognosis = this.cil.standardPrognosis;
+		this.databaseService.putIncidentLabel(incidentLabel);
+		this.displayDialog = false;
+	}
 }

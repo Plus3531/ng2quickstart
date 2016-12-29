@@ -3,7 +3,10 @@ import { IncidentLabelDisplay, IncidentLabel, IncidentCategory, SituatorCaterory
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 
-
+//----------------------------------------------------------------------------
+//this functions resolve  foreignkey ids. A Display (Disp) property is added.
+//show the disp property instead of the fk id to the user
+//
 function resolveIcIncidentLabels(ild: IncidentLabelDisplay) {
 	let lookupIc = this.find(function (ic: IncidentCategory) {
 		return ild.incidentCategory == ic.id;
@@ -23,10 +26,12 @@ function resolveScIncidentLabels(ild: IncidentLabelDisplay) {
 	}
 	return ild;
 }
+//----------------------------------------------------------------------------
+
 @Injectable()
 export class DatabaseService {
 	constructor(private http: Http) { }
-	
+
 	private _ilds: BehaviorSubject<Array<IncidentLabelDisplay>> = new BehaviorSubject([]);
 	public ilds: Observable<Array<IncidentLabelDisplay>> = this._ilds.asObservable();
 
@@ -40,7 +45,7 @@ export class DatabaseService {
 	private incidentCategories: Array<IncidentCategory>;
 	private situatorCategories: Array<SituatorCaterory>;
 
-	
+
 	getDisplayIncidentLabels() {
 
 		let requests: Array<any> = [];
@@ -63,21 +68,13 @@ export class DatabaseService {
 			this._ics.next(this.incidentCategories);
 
 		});
-
-		return this.incidentLabels;
-
-		// let ild: IncidentLabelDisplay[] = [{
-		// 	name: 'pjTest',
-		// 	abbreviation: 'jp',
-		// 	canBeSubincident: false,
-		// 	id: 6,
-		// 	description: 'je zus',
-		// 	incidentCategory: 3,
-		// 	incidentCategoryDisp: 'incidentcatDisppp',
-		// 	situatorCategory: 23,
-		// 	situatorCategoryDisp: 'sitCatDispp',
-		// 	standardPrognosis: 8
-		// }]
-		// return ild;
+		return this.incidentLabels;	
+	}
+	putIncidentLabel(incidentLabel: IncidentLabel) {
+		let headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		this.http.put(this.ilUrl, JSON.stringify(incidentLabel), { headers: headers })
+			.catch((error: any) => Observable.throw(error.json().error || 'Server error'))
+			.subscribe((iii) => {console.log(JSON.stringify(iii)) });
 	}
 }
