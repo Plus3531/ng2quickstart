@@ -7,17 +7,18 @@ import { SelectModule } from "ng2-select";
 import { HttpModule } from '@angular/http';
 import { routing } from "./app.routes";
 import { SelectTestComponent } from "./app.selectTest";
-import {DataTableModule,SharedModule, DialogModule, DropdownModule} from 'primeng/primeng';
+import {BlueComponent} from './app.blue';
+import { DataTableModule, SharedModule, DialogModule, DropdownModule, InputTextareaModule } from 'primeng/primeng';
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
 
 @NgModule({
   imports: [BrowserModule, FormsModule, SelectModule, HttpModule,
-   DataTableModule, SharedModule,
-    DialogModule, DropdownModule, routing],
-  declarations: [AppComponent, IncidentLabelComponent, SelectTestComponent],
+    DataTableModule, SharedModule,
+    DialogModule, DropdownModule, InputTextareaModule, routing],
+  declarations: [AppComponent, IncidentLabelComponent, SelectTestComponent, BlueComponent],
   bootstrap: [AppComponent],
-   providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy}
-    ]
+  providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
+  ]
 })
 export class AppModule { }

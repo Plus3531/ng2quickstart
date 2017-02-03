@@ -45,6 +45,10 @@ export class DatabaseService {
 	private incidentCategories: Array<IncidentCategory>;
 	private situatorCategories: Array<SituatorCaterory>;
 
+	async getStuff(): Promise<string> {
+		const response = await this.http.get(this.ilUrl).toPromise();
+		return response.json();
+	}
 
 	getDisplayIncidentLabels() {
 
@@ -68,13 +72,13 @@ export class DatabaseService {
 			this._ics.next(this.incidentCategories);
 
 		});
-		return this.incidentLabels;	
+		return this.incidentLabels;
 	}
 	putIncidentLabel(incidentLabel: IncidentLabel) {
 		let headers = new Headers();
 		headers.append('Content-Type', 'application/json');
 		this.http.put(this.ilUrl, JSON.stringify(incidentLabel), { headers: headers })
 			.catch((error: any) => Observable.throw(error.json().error || 'Server error'))
-			.subscribe((iii) => {console.log(JSON.stringify(iii)) });
+			.subscribe((iii) => { console.log(JSON.stringify(iii)) });
 	}
 }

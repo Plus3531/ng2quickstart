@@ -29,19 +29,23 @@ import { DatabaseService } from './service/database.service';
 	<p-column field="situatorCategoryDisp" header="Situator Category" [filter]="true"></p-column>
 </p-dataTable>
 
-<p-dialog header="IncidentLabel" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" width="500">
+<p-dialog header="IncidentLabel" [(visible)]="displayDialog" responsive="true" modal="true" width="600">
 	<div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="cil">
 		<div class="ui-grid-row">
-			<div class="ui-grid-col-4"><label for="cil.name">Name</label></div>
-			<div class="ui-grid-col-8"><input style="{width:100%}"pInputText id="cil.name" [(ngModel)]="cil.name" /></div>
+			<div class="ui-grid-col-3"><label style="text-align:right;width:100%" for="cil.name">Name</label></div>
+			<div class="ui-grid-col-9"><input type="text" style="width:100%" pInputText id="cil.name" [(ngModel)]="cil.name" /></div>
 		</div>
 		<div class="ui-grid-row">
-			<div class="ui-grid-col-4"><label for="cil.ic">Incident Category</label></div>
-			<div class="ui-grid-col-8">
-			<select [(ngModel)]="cic" id="cil.ic">
+			<div class="ui-grid-col-3"><label style="text-align:right;width:100%" for="cil.ic">Incident Category</label></div>
+			<div class="ui-grid-col-9">
+			<select style="width:100%;height:25px" [(ngModel)]="cic" id="cil.ic">
 				<option *ngFor="let c of incidentCategoryTbl" [ngValue]="c">{{c.name}}</option>
 			</select>
 			</div>
+		</div>
+		<div class="ui-grid-row">
+			<div class="ui-grid-col-3"><label style="text-align:right;width:100%" for="cil.description">Description</label></div>
+			<div class="ui-grid-col-9"><textarea rows="5" cols="30" pInputTextarea id="cil.description" [(ngModel)]="cil.description"></textarea></div>
 		</div>
 	</div>
 	<footer>
@@ -56,7 +60,7 @@ import { DatabaseService } from './service/database.service';
 	`]
 })
 export class IncidentLabelComponent {
-	constructor(private http: Http, private databaseService: DatabaseService) { }
+	constructor(private databaseService: DatabaseService) { }
 	//	private item : Array<IncidentLabelDisplay> = null;
 	private ilUrl = 'http://localhost:4412/api/IncidentLabel';
 	public result: string;
